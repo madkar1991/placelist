@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script>
+
+function loginuser() {
+ 
+    let password = document.forms["myForm"]["pswrd"].value;
+    let email = document.forms["myForm"]["email"].value;
+    let authorise = 'http://localhost:1337/auth/token'; 
+
+fetch(authorise, {
+        method: "POST",
+        headers: {
+            Accept: "application/json, text/plain, */*",
+            "Content-Type": "application/json",
+        },
+        body:  JSON.stringify({email:email,password:password,}),
+})
+.then(response => {
+    if (response.ok) {
+      return response.json();
+    }
+    throw new Error('Authentication failed');
+  })
+  .then(data => {
+                welcomeuser(data.email);
+              })
+
+return false;
+
+            }
+
+
+function welcomeuser(firstname){        
+document.getElementById('welcome').innerHTML = "Hello "+firstname+"! You are now signed in :)";
+}
+
+
+</script>
+</head>
+<body>
+
+<h2>Welcome to PlaceList</h2>
+
+<p id="welcome"></p>
+
+<form name="myForm" action="">
+    
+ <!-- Email -->
+    <label for="email">Your email</label>
+    <input type="text" placeholder="Enter email" autocomplete="off" name="email" required>
+
+    <br><br>
+
+    <!-- Password -->
+    <label for="pswrd">Your password</label>
+    <input type="password" placeholder="Enter Password" autocomplete="off" name="pswrd" required>
+
+    <br><br>
+
+  <input type="submit" value="Log in" onclick="return loginuser()">
+
+</form>
+
+<p id="Tag">Don't have an account?</p>
+<p id="loginlink"><a href="Placelist_signup_v3.html">Sign up here </a></p>
+
+
+</body>
+</html>
+
