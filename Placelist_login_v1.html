@@ -8,7 +8,10 @@ function loginuser() {
     let password = document.forms["myForm"]["pswrd"].value;
     let email = document.forms["myForm"]["email"].value;
     let authorise = 'http://localhost:1337/auth/token'; 
+    let userdetails = 'http://localhost:1337/users/me';
 
+
+    //get authorisation token
 fetch(authorise, {
         method: "POST",
         headers: {
@@ -16,16 +19,34 @@ fetch(authorise, {
             "Content-Type": "application/json",
         },
         body:  JSON.stringify({email:email,password:password,}),
-})
-.then(response => {
-    if (response.ok) {
-      return response.json();
-    }
-    throw new Error('Authentication failed');
-  })
-  .then(data => {
-                welcomeuser(data.email);
-              })
+        })
+            .then(response => {
+                if (response.ok) {
+                return response.json();
+                }
+                throw new Error('Authentication failed');
+            })
+            .then(authData => {
+                const authToken=authData.access;
+
+            //get user details from token
+            
+                        fetch(userdetails,{
+                                method: "GET",
+                                headers: {  'Authorization': `Bearer ${authToken}`},
+                                })
+                                    .then(response => {
+                                        if (response.ok) {
+                                        return response.json();
+                                        }
+                                        throw new Error('Authentication failed');
+                                    })
+                                    .then(userinfo =>{
+                                    welcomeuser(userinfo.first_name);
+                                    });
+
+
+            });
 
 return false;
 
@@ -43,7 +64,9 @@ document.getElementById('welcome').innerHTML = "Hello "+firstname+"! You are now
 
 <h2>Welcome to PlaceList</h2>
 
-<p id="welcome"></p>
+<p id="welcome">This is where a name should show</p>
+
+<br>
 
 <form name="myForm" action="">
     
