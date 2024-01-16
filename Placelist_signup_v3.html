@@ -1,36 +1,42 @@
 <!DOCTYPE html>
 <html>
 <head>
-<script>
+    <script>
 
-const filePath = 'placelist_login_v0.html';
-let link = `<a href="${filePath}">Log in here </a>`;
+        const filePath = 'placelist_login_v0.html';
+        let link = `<a href="${filePath}">Log in here </a>`;
 
 
-function createuser() {
- 
-    let firstname = document.forms["myForm"]["fname"].value;
-    let lastname = document.forms["myForm"]["lname"].value;
-    let password = document.forms["myForm"]["pswrd"].value;
-    let email = document.forms["myForm"]["email"].value; 
-    let login = 'http://localhost:1337/users/register';
-    
-    fetch(login, {
-    method: "POST",
-    headers: {
-            Accept: "application/json, text/plain, */*",
-            "Content-Type": "application/json",
-          },
-    body:  JSON.stringify({email:email,password:password,password2:password,first_name:firstname,last_name:lastname,}),
-});
+        function createuser() {
 
-document.getElementById('welcome').innerHTML = "Thank you for signing up "+firstname+'! '+link;
+            let firstname = document.forms["myForm"]["fname"].value;
+            let lastname = document.forms["myForm"]["lname"].value;
+            let password = document.forms["myForm"]["pswrd"].value;
+            let email = document.forms["myForm"]["email"].value;
+            let login = 'http://localhost:1337/users/register';
 
-return false;
+            fetch(login, {
+                method: "POST",
+                headers: {
+                    Accept: "application/json, text/plain, */*",
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    email: email,
+                    password: password,
+                    password2: password,
+                    first_name: firstname,
+                    last_name: lastname,
+                }),
+            });
 
-}
+            document.getElementById('welcome').innerHTML = "Thank you for signing up " + firstname + '! ' + link;
 
-</script>
+            return false;
+
+        }
+
+    </script>
 
 </head>
 
@@ -41,7 +47,7 @@ return false;
 <h3 id="welcome">Create your account</h3>
 
 <form name="myForm" action="">
-    
+
     <label for="fname">Your first name</label>
     <input type="text" placeholder="Enter first name" autocomplete="off" name="fname" required>
 
@@ -53,7 +59,7 @@ return false;
 
     <br><br>
 
- <!-- Email -->
+    <!-- Email -->
     <label for="email">Your email</label>
     <input type="text" placeholder="Enter email" autocomplete="off" name="email" required>
 
@@ -65,7 +71,7 @@ return false;
 
     <br><br>
 
-  <input type="submit" value="Create Account" onclick="return createuser()">
+    <input type="submit" value="Create Account" onclick="return createuser()">
 
 </form>
 
