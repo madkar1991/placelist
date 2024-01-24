@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script>
+
+        var myToken = null;
+
+        function loginuser() {
+
+            let password = document.forms["myForm"]["pswrd"].value;
+            let email = document.forms["myForm"]["email"].value;
+            let authorise = 'http://localhost:1337/auth/token';
+            let userdetails = 'http://localhost:1337/users/me';
+
+
+            //get authorisation token
+            fetch(authorise, {
+                method: "POST",
+                headers: {
+                    Accept: "application/json, text/plain, */*",
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({email: email, password: password,}),
+            })
+                .then(response => {
+                    if (response.ok) {
+                        myToken = "set the token here"
+                        return response.json();
+                    }
+                    throw new Error('Authentication failed');
+                })
+                .then(authData => {
+                    const authToken = authData.access;
+
+                    //get user details from token
+
+                    fetch(userdetails, {
+                        method: "GET",
+                        headers: {'Authorization': `Bearer ${authToken}`},
+                    })
+                        .then(response => {
+                            if (response.ok) {
+                                return response.json();
+                            }
+                            throw new Error('Authentication failed');
+                        })
+                        .then(userinfo => {
+                            showPage("privatePage")
+                        });
+
+                });
+
+            return false;
+
+        }
+
+        function createuser() {
+
+            let firstname = document.forms["myForm"]["fname"].value;
+            let lastname = document.forms["myForm"]["lname"].value;
+            let password = document.forms["myForm"]["pswrd"].value;
+            let email = document.forms["myForm"]["email"].value;
+            let login = 'http://localhost:1337/users/register';
+
+            fetch(login, {
+                method: "POST",
+                headers: {
+                    Accept: "application/json, text/plain, */*",
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    email: email,
+                    password: password,
+                    password2: password,
+                    first_name: firstname,
+                    last_name: lastname,
+                }),
+            }).then(() => {
+                showPage("loginPage")
+                alert("Thank you for signing up " + firstname + '! ')
+            });
+
+            return false;
+        }
+
+        function showPage(pageToShow) {
+            // const pages = ["loginPage", "signUpPage", "privatePage"];
+            // for (let i = 0; i < 3; i++) {
+            //     const page = pages[i]
+            // }
+            // Document Object Model
+            ["loginPage", "signUpPage", "privatePage"].forEach(pageName => {
+                const page = document.getElementById(pageName)
+                // document.getElementsByClassName("page")
+                if (pageName === pageToShow) {
+                    page.style.display = "block"
+                } else {
+                    page.style.display = "none"
+                }
+                // ternary operator
+                page.style.display = pageName === pageToShow ? "block" : "none";
+            })
+        }
+    </script>
+</head>
+<body>
+
+<div id="loginPage" style="display: none;" class="page">
+    <h2>Welcome to PlaceList</h2>
+
+    <p>This is where a name should show</p>
+
+    <br>
+
+    <form id="loginForm" action="">
+
+        <!-- Email -->
+        <label for="email">Your email</label>
+        <input type="text" placeholder="Enter email" autocomplete="off" name="email" required>
+
+        <br><br>
+
+        <!-- Password -->
+        <label for="pswrd">Your password</label>
+        <input type="password" placeholder="Enter Password" autocomplete="off" name="pswrd" required>
+
+        <br><br>
+
+        <input type="submit" value="Log in" onclick="return loginuser()">
+
+    </form>
+
+    <p id="Tag">Don't have an account?</p>
+    <p id="loginlink"><a href="Placelist_signup_v3.html">Sign up here </a></p>
+</div>
+
+<div id="signUpPage" style="display: block;" class="page">
+    <h2>Welcome to PlaceList</h2>
+
+    <h3>Create your account</h3>
+
+    <form name="myForm" action="">
+
+        <label for="fname">Your first name</label>
+        <input type="text" placeholder="Enter first name" autocomplete="off" name="fname" required>
+
+        <br><br>
+
+        <!-- Last name -->
+        <label for="lname">Your last name</label>
+        <input type="text" placeholder="Enter last name" autocomplete="off" name="lname" required>
+
+        <br><br>
+
+        <!-- Email -->
+        <label for="email">Your email</label>
+        <input type="text" placeholder="Enter email" autocomplete="off" name="email" required>
+
+        <br><br>
+
+        <!-- Password -->
+        <label for="pswrd">Your password</label>
+        <input type="password" placeholder="Enter Password" autocomplete="off" name="pswrd" required>
+
+        <br><br>
+
+        <input type="submit" value="Create Account" onclick="return createuser()">
+
+    </form>
+</div>
+
+<div id="privatePage" style="display: none;" class="page">
+    This is inside the app.
+
+<!--    todo: add logout button? edit user info?-->
+</div>
+
+</body>
+</html>
+
